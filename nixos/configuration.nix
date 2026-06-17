@@ -1,7 +1,7 @@
 { config, pkgs, ... }:
 
 {
-  imports = [];
+  imports = [ ];
 
   # ── Boot ─────────────────────────────────────────────────────────────────
   boot.loader.systemd-boot.enable = true;
@@ -9,17 +9,22 @@
 
   # VirtIO / Proxmox kernel modules
   boot.initrd.availableKernelModules = [
-    "virtio_pci" "virtio_blk" "virtio_scsi" "virtio_net"
-    "ahci" "xhci_pci" "usbhid"
+    "virtio_pci"
+    "virtio_blk"
+    "virtio_scsi"
+    "virtio_net"
+    "ahci"
+    "xhci_pci"
+    "usbhid"
   ];
-  boot.kernelModules = [ "kvm-intel" ];   # swap for kvm-amd if Proxmox host is AMD
+  boot.kernelModules = [ "kvm-intel" ]; # swap for kvm-amd if Proxmox host is AMD
 
   # ── Networking ───────────────────────────────────────────────────────────
-  networking.hostName = "server";         # change to taste
+  networking.hostName = "server"; # change to taste
   networking.networkmanager.enable = true;
 
   # ── Locale / time ────────────────────────────────────────────────────────
-  time.timeZone = "America/New_York";     # change to your timezone
+  time.timeZone = "America/New_York"; # change to your timezone
   i18n.defaultLocale = "en_US.UTF-8";
 
   # ── NVIDIA (headless compute, GTX 1060 Pascal) ───────────────────────────
@@ -27,7 +32,7 @@
   hardware.nvidia = {
     modesetting.enable = true;
     open = false;
-    nvidiaSettings = false;             # no GUI settings panel needed
+    nvidiaSettings = false; # no GUI settings panel needed
     powerManagement.enable = false;
     package = config.boot.kernelPackages.nvidiaPackages.stable;
   };
@@ -62,9 +67,14 @@
   };
 
   # ── Users ────────────────────────────────────────────────────────────────
-  users.users.stamno = {                  # change username if needed
+  users.users.stamno = {
+    # change username if needed
     isNormalUser = true;
-    extraGroups = [ "wheel" "docker" "networkmanager" ];
+    extraGroups = [
+      "wheel"
+      "docker"
+      "networkmanager"
+    ];
     openssh.authorizedKeys.keys = [
       # Paste your public SSH key here, e.g.:
       # "ssh-ed25519 AAAA... user@host"
@@ -77,17 +87,21 @@
   # ── System packages ───────────────────────────────────────────────────────
   environment.systemPackages = with pkgs; [
     git
+    vim
     curl
     wget
     htop
-    nvtopPackages.nvidia   # GPU process monitor
+    nvtopPackages.nvidia # GPU process monitor
     docker-compose
-    pciutils               # lspci — useful to verify GPU passthrough
+    pciutils # lspci — useful to verify GPU passthrough
     usbutils
   ];
 
   # ── Nix settings ─────────────────────────────────────────────────────────
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  nix.settings.experimental-features = [
+    "nix-command"
+    "flakes"
+  ];
 
   system.stateVersion = "25.05";
 }
