@@ -3,6 +3,8 @@
 {
   imports = [ ];
 
+  nixpkgs.config.allowUnfree = true;
+
   # ── Boot ─────────────────────────────────────────────────────────────────
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
