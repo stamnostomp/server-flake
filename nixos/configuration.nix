@@ -79,8 +79,7 @@
       "networkmanager"
     ];
     openssh.authorizedKeys.keys = [
-      # Paste your public SSH key here, e.g.:
-      # "ssh-ed25519 AAAA... user@host"
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHTApvf6GJQ9Jbym/qSTdICNOzLoGwzh9DYQwIE1aHuO stamno@stamno.com"
     ];
   };
 
