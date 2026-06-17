@@ -1,15 +1,17 @@
 {
-  description = "A very basic flake";
+  description = "NixOS server - Proxmox VM with GTX 1060 PCIe passthrough";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
   };
 
   outputs = { self, nixpkgs }: {
-
-    packages.x86_64-linux.hello = nixpkgs.legacyPackages.x86_64-linux.hello;
-
-    packages.x86_64-linux.default = self.packages.x86_64-linux.hello;
-
+    nixosConfigurations.server = nixpkgs.lib.nixosSystem {
+      system = "x86_64-linux";
+      modules = [
+        ./nixos/configuration.nix
+        ./nixos/hardware-configuration.nix
+      ];
+    };
   };
 }
