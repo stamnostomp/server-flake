@@ -6,8 +6,9 @@
   nixpkgs.config.allowUnfree = true;
 
   # ── Boot ─────────────────────────────────────────────────────────────────
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
+  # Legacy BIOS boot (SeaBIOS in Proxmox) — change /dev/vda to match your disk
+  boot.loader.grub.enable = true;
+  boot.loader.grub.device = "/dev/sda";
 
   # VirtIO / Proxmox kernel modules
   boot.initrd.availableKernelModules = [
