@@ -37,7 +37,7 @@
     open = false;
     nvidiaSettings = false; # no GUI settings panel needed
     powerManagement.enable = false;
-    package = config.boot.kernelPackages.nvidiaPackages.stable;
+    package = config.boot.kernelPackages.nvidiaPackages.legacy_535;
   };
 
   # Loading the driver without an X display server
