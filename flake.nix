@@ -13,5 +13,13 @@
         ./nixos/hardware-configuration.nix
       ];
     };
+
+    nixosConfigurations.game-servers = nixpkgs.lib.nixosSystem {
+      system = "x86_64-linux";
+      modules = [
+        ./nixos/game-servers/configuration.nix
+        ./nixos/game-servers/hardware-configuration.nix
+      ];
+    };
   };
 }
