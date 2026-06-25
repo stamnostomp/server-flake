@@ -23,7 +23,7 @@
   boot.kernelModules = [ "kvm-intel" ]; # swap for kvm-amd if Proxmox host is AMD
 
   # ── Networking ───────────────────────────────────────────────────────────
-  networking.hostName = "server"; # change to taste
+  # hostName intentionally left unset — keeps whatever the machine already has.
   networking.networkmanager.enable = true;
 
   # ── Locale / time ────────────────────────────────────────────────────────

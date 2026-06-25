@@ -22,7 +22,6 @@
       modules = [
         ./nixos/configuration.nix
         ./nixos/hardware-configuration.nix
-        { networking.hostName = "server-nogpu"; }
       ];
     };
 
