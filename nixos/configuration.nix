@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, hasGpu ? true, ... }:
 
 {
   imports = [ ];
@@ -32,27 +32,30 @@
 
   # ── NVIDIA (headless compute, GTX 1060 Pascal) ───────────────────────────
   # GTX 1060 does NOT support the open-source kernel module (requires Turing+)
-  hardware.nvidia = {
+  # 580.x is the last branch with full Pascal support (590 drops it); legacy_580
+  # is nixpkgs' LTSB pin for that branch, supported through Aug 2028.
+  # Set via specialArgs (see flake.nix `server-nogpu` output) to skip all of this.
+  hardware.nvidia = lib.mkIf hasGpu {
     modesetting.enable = true;
     open = false;
     nvidiaSettings = false; # no GUI settings panel needed
     powerManagement.enable = false;
-    package = config.boot.kernelPackages.nvidiaPackages.legacy_535;
+    package = config.boot.kernelPackages.nvidiaPackages.legacy_580;
   };
 
   # Loading the driver without an X display server
-  services.xserver.videoDrivers = [ "nvidia" ];
+  services.xserver.videoDrivers = lib.mkIf hasGpu [ "nvidia" ];
   services.xserver.enable = false;
 
   # NVIDIA container toolkit — lets Docker containers access the GPU
-  hardware.nvidia-container-toolkit.enable = true;
+  hardware.nvidia-container-toolkit.enable = hasGpu;
 
   # ── Docker ───────────────────────────────────────────────────────────────
   virtualisation.docker = {
     enable = true;
     enableOnBoot = true;
     # Expose GPU to containers via CDI (populated by nvidia-container-toolkit)
-    daemon.settings = {
+    daemon.settings = lib.mkIf hasGpu {
       features.cdi = true;
     };
   };
@@ -93,11 +96,10 @@
     curl
     wget
     htop
-    nvtopPackages.nvidia # GPU process monitor
     docker-compose
     pciutils # lspci — useful to verify GPU passthrough
     usbutils
-  ];
+  ] ++ lib.optionals hasGpu [ pkgs.nvtopPackages.nvidia ]; # GPU process monitor
 
   # ── Nix settings ─────────────────────────────────────────────────────────
   nix.settings.experimental-features = [

@@ -8,9 +8,21 @@
   outputs = { self, nixpkgs }: {
     nixosConfigurations.server = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
+      specialArgs = { hasGpu = true; };
       modules = [
         ./nixos/configuration.nix
         ./nixos/hardware-configuration.nix
+      ];
+    };
+
+    # Same as `server` but without the NVIDIA/GPU bits — for a VM/host with no GPU passthrough.
+    nixosConfigurations.server-nogpu = nixpkgs.lib.nixosSystem {
+      system = "x86_64-linux";
+      specialArgs = { hasGpu = false; };
+      modules = [
+        ./nixos/configuration.nix
+        ./nixos/hardware-configuration.nix
+        { networking.hostName = "server-nogpu"; }
       ];
     };
 
